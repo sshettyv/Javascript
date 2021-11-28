@@ -1,49 +1,24 @@
+const apiURL = "https://api.wheretheiss.at/v1/satellites/25544";
+const map = L.map('map').setView([0,0], 1);
+const marker = L.marker([0, 0]).addTo(map);
  
-chartIt();
+const attribution =
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
+const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+const tiles = L.tileLayer(tileUrl, { attribution });
+      tiles.addTo(map);
 
-async function   chartIt(){
-const data=    await getData();
-const ctx = document.getElementById('myChart').getContext('2d');
-
-const myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: data.xs,
-        datasets: [{
-            label: 'Global Temp',
-            data: data.ys,
-            backgroundColor:
-                'rgba(255, 99, 132, 0.2)',
-            borderColor: 
-                'rgba(255, 99, 132, 1)',
-            borderWidth: 1
-        }]
-    },
-   
-});
+async function getISS(){
+    const response = await fetch(apiURL);
+    const data = await response.json();
+    const {latitude,longitude }= data;
+    document.getElementById('lat').textContent = latitude;
+    document.getElementById('lon').textContent = longitude;
+    marker.setLatLng([latitude,longitude]);
+    map.setView([latitude,longitude],4); // zoom on the satellites position
 
 }
-//getData().catch(err=> console.log(err))
 
-async function getData(){
-    const xs = [];
-    const ys = [];
+setInterval(getISS,2000);
 
-    const response =await  fetch('data1.csv');
-    const data = await response.text();
-     
-    const table= data.split('\n').slice(1);
-   
-    table.forEach( row => {
-        const columns = row.split(',');
-        const year = columns[0];
-        const temp = columns[1];
-        xs.push(year);
-        ys.push(parseFloat(temp)+14);
-        console.log(year,temp);
-        
-    } )
-    return {xs,ys}
-
-} 
