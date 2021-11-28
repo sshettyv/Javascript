@@ -1,34 +1,49 @@
-console.log('about to fet a rainbow');
-/* fetch('rainbow.jpg')
-    .then(response => {
-                        console.log(response); 
-                        return response.blob();})
-    .then(response => {
-                        console.log(response);
-                        console.log(URL.createObjectURL(response));
+ 
+chartIt();
 
-                        document.getElementById('rainbow').src =URL.createObjectURL(response);    })
-    .catch(err => console.log(err));                    
- */
-    catchRainbow().catch(err => console.log(err) );  
-async function catchRainbow(){
 
-    const responseImg = await fetch('rainbow.jpg');
-    const blob = await responseImg.blob();
-    document.getElementById('rainbow').src =URL.createObjectURL(blob);    
+async function   chartIt(){
+const data=    await getData();
+const ctx = document.getElementById('myChart').getContext('2d');
 
-};
-
-/* fetch('text.txt')
-            .then(response =>  response.text())
-            .then(text => {document.getElementById('text').innerHTML = text;} )
-            .catch(err => console.log(err) );  
- */
-fetchText().catch(err => console.log(err));
-async function fetchText(){
-    const responseTxt = await fetch('text.txt');
-    const text = await responseTxt.text();
-    document.getElementById('text').innerHTML = text;
-
+const myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: data.xs,
+        datasets: [{
+            label: 'Global Temp',
+            data: data.ys,
+            backgroundColor:
+                'rgba(255, 99, 132, 0.2)',
+            borderColor: 
+                'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+        }]
+    },
+   
+});
 
 }
+//getData().catch(err=> console.log(err))
+
+async function getData(){
+    const xs = [];
+    const ys = [];
+
+    const response =await  fetch('data1.csv');
+    const data = await response.text();
+     
+    const table= data.split('\n').slice(1);
+   
+    table.forEach( row => {
+        const columns = row.split(',');
+        const year = columns[0];
+        const temp = columns[1];
+        xs.push(year);
+        ys.push(parseFloat(temp)+14);
+        console.log(year,temp);
+        
+    } )
+    return {xs,ys}
+
+} 
