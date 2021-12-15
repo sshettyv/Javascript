@@ -1,0 +1,20 @@
+{
+  "name": "Javascript",
+  "version": "1.0.0",
+  "description": "tutorial Files for Javascript netninja tutorial",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sshettyv/Javascript.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sshettyv/Javascript/issues"
+  },
+  "homepage": "https://github.com/sshettyv/Javascript#readme"
+}
